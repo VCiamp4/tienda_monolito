@@ -2,7 +2,7 @@ package com.tienda.monolito.user;
 
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.tienda.monolito.user.entity.Usuario;
+import com.tienda.monolito.entities.Usuario;
 
 public class UserTest {
   
