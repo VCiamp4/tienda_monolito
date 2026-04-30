@@ -74,10 +74,11 @@ CREATE TABLE carrito (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Item del carrito: producto + cantidad + precio capturado al momento de agregar
+-- Item del carrito: carrito_id es nullable para poder "vaciar" el carrito en checkout
+-- sin eliminar el registro (delivery_order referencia este item por FK)
 CREATE TABLE carrito_item (
     id              BIGSERIAL      PRIMARY KEY,
-    carrito_id      BIGINT         NOT NULL REFERENCES carrito(id),
+    carrito_id      BIGINT         REFERENCES carrito(id),
     producto_id     BIGINT         NOT NULL REFERENCES producto(id),
     cantidad        INTEGER        NOT NULL,
     precio_unitario DECIMAL(15, 2) NOT NULL

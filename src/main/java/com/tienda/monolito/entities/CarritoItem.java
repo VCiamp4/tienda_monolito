@@ -16,8 +16,10 @@ public class CarritoItem {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "carrito_id", nullable = false)
+    // nullable: se setea null al hacer checkout para "vaciar" el carrito
+    // sin eliminar el registro (DeliveryOrder referencia este item por FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carrito_id")
     private Carrito carrito;
 
     @ManyToOne(fetch = FetchType.EAGER)
