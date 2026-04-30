@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class CarritoItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // nullable: se setea null al hacer checkout para "vaciar" el carrito

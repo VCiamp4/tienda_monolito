@@ -1,4 +1,4 @@
-package com.tienda.monolito.entities;
+/*package com.tienda.monolito.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,3 +42,4 @@ public class Parametros {
   private String API_key;
 
 }
+  */

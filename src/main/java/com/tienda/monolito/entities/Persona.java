@@ -18,13 +18,13 @@ import java.util.List;
 public class Persona {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "nombre_completo", nullable = false)
     private String nombreCompleto;
 
-    @Column(name = "dni", nullable = false, unique = true, updatable = false)
+    @Column(name = "documento", nullable = false, unique = true, updatable = false)
     private String documento;
 
     @Column(name = "telefono", unique = true)

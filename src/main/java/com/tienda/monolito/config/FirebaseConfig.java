@@ -26,13 +26,18 @@ public class FirebaseConfig {
             return;
         }
 
-        InputStream credentialsStream = getCredentialsStream();
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(credentialsStream))
-                .setProjectId(projectId)
-                .build();
+        try {
+            InputStream credentialsStream = getCredentialsStream();
+            FirebaseOptions options = FirebaseOptions.builder()
+                    .setCredentials(GoogleCredentials.fromStream(credentialsStream))
+                    .setProjectId(projectId)
+                    .build();
 
-        FirebaseApp.initializeApp(options);
+            FirebaseApp.initializeApp(options);
+        } catch (IOException e) {
+            System.err.println("Firebase credentials not found or invalid. Firebase authentication will not be available. Error: " + e.getMessage());
+            // Don't rethrow - allow the application to start without Firebase
+        }
     }
 
     // Intenta cargar desde el classpath primero, luego desde el filesystem
@@ -40,6 +45,11 @@ public class FirebaseConfig {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(credentialsPath);
         if (stream != null) {
             return stream;
+        }
+        // Try filesystem
+        java.io.File file = new java.io.File(credentialsPath);
+        if (!file.exists()) {
+            throw new IOException("Firebase credentials file not found: " + credentialsPath);
         }
         return new FileInputStream(credentialsPath);
     }
