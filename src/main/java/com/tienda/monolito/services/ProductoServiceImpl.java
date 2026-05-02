@@ -54,6 +54,11 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    public List<Producto> findByKeywordAndCategoria(String keyword, Long categoriaId) {
+        return productoRepository.findByKeywordAndCategoria(keyword, categoriaId);
+    }
+
+    @Override
     @Transactional
     public Producto create(Long usuarioVendedorId, Long categoriaId, Long direccionId, Producto producto) {
         Usuario vendedor = usuarioRepository.findById(usuarioVendedorId)
@@ -62,11 +67,15 @@ public class ProductoServiceImpl implements ProductoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con id: " + categoriaId));
         Direccion direccion = direccionRepository.findById(direccionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Dirección no encontrada con id: " + direccionId));
+        if (!direccion.getPersona().getId().equals(producto.getUsuarioVendedor().getPersona().getId())) {
+            throw new ResourceNotFoundException("Dirección no encontrada con id: " + direccionId);
+        }
 
         producto.setUsuarioVendedor(vendedor);
         producto.setCategoria(categoria);
         producto.setDireccion(direccion);
         producto.setActivo(true);
+        producto.setEnVenta(false);
 
         return productoRepository.save(producto);
     }
@@ -81,7 +90,7 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setPrecio(data.getPrecio());
         producto.setStock(data.getStock());
         producto.setImageUrl(data.getImageUrl());
-
+        producto.setEnVenta(data.getEnVenta());
         if (data.getCategoria() != null) {
             Categoria categoria = categoriaRepository.findById(data.getCategoria().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada"));
@@ -91,6 +100,9 @@ public class ProductoServiceImpl implements ProductoService {
         if (data.getDireccion() != null) {
             Direccion direccion = direccionRepository.findById(data.getDireccion().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Dirección no encontrada"));
+            if (!direccion.getPersona().getId().equals(producto.getUsuarioVendedor().getPersona().getId())) {
+                throw new ResourceNotFoundException("Dirección no encontrada");
+            }
             producto.setDireccion(direccion);
         }
 

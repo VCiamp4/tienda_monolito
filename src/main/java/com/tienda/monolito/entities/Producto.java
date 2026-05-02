@@ -46,5 +46,8 @@ public class Producto {
     @Column(nullable = false)
     private Boolean activo;
 
+    @Column(nullable = false)
+    private Boolean enVenta;
+
     //FIXME - Pide definir "Ubicaciones donde se despachará el producto". No se puede usar la entidad direcciones como está ya que no tienen por qué ser de una persona
 }

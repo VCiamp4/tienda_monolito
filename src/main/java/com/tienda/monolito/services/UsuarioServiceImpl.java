@@ -53,25 +53,28 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional
     public Usuario create(Long personaId, String email, String firebaseUid) {
-        if (usuarioRepository.existsByEmail(email)) {
-            throw new BusinessException("Ya existe un usuario con el email: " + email);
-        }
-        if (usuarioRepository.existsByFirebaseUid(firebaseUid)) {
-            throw new BusinessException("Ya existe un usuario con ese UID de Firebase");
-        }
 
-        Persona persona = personaRepository.findById(personaId)
-                .orElseThrow(() -> new ResourceNotFoundException("Persona no encontrada con id: " + personaId));
+        return usuarioRepository.findByFirebaseUid(firebaseUid)
+                .orElseGet(() -> {
 
-        Usuario usuario = Usuario.builder()
-                .persona(persona)
-                .email(email)
-                .firebaseUid(firebaseUid)
-                .activo(true)
-                .roles(new ArrayList<>())
-                .build();
+                    if (usuarioRepository.existsByEmail(email)) {
+                        throw new BusinessException("Ya existe un usuario con el email: " + email);
+                    }
 
-        return usuarioRepository.save(usuario);
+                    Persona persona = personaRepository.findById(personaId)
+                            .orElseThrow(() -> new ResourceNotFoundException(
+                                    "Persona no encontrada con id: " + personaId));
+
+                    Usuario usuario = Usuario.builder()
+                            .persona(persona)
+                            .email(email)
+                            .firebaseUid(firebaseUid)
+                            .activo(true)
+                            .roles(new ArrayList<>())
+                            .build();
+
+                    return usuarioRepository.save(usuario);
+                });
     }
 
     @Override

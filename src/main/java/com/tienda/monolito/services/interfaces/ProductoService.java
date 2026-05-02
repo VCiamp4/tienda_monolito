@@ -16,6 +16,8 @@ public interface ProductoService {
 
     List<Producto> findByVendedor(Long usuarioId);
 
+    List<Producto> findByKeywordAndCategoria(String keyword, Long categoriaId);
+
     Producto create(Long usuarioVendedorId, Long categoriaId, Long direccionId, Producto producto);
 
     Producto update(Long id, Producto data);
